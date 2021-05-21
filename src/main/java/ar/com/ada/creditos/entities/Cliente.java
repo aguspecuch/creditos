@@ -7,6 +7,7 @@ import javax.persistence.*;
 import org.hibernate.annotations.NaturalId;
 
 import ar.com.ada.creditos.exceptions.ClienteDNIException;
+import ar.com.ada.creditos.exceptions.ClienteNombreException;
 
 @Entity
 @Table(name = "cliente")
@@ -58,7 +59,11 @@ public class Cliente {
         return nombre;
     }
 
-    public void setNombre(String nombre){
+    public void setNombre(String nombre) throws ClienteNombreException{
+
+        if (nombre.equals("")) {
+            throw new ClienteNombreException(this, "no ingreso un nombre valido");
+        }
         this.nombre = nombre;
     }
 
