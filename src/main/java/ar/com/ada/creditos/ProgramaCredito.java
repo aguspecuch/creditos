@@ -52,6 +52,9 @@ public class ProgramaCredito {
                     case 6:
                         listarPrestamos();
                         break;
+                    case 7:
+                        agregarPrestamo();
+                        break;
                     default:
                         System.out.println("La opcion no es correcta.");
                         break;
@@ -251,6 +254,32 @@ public class ProgramaCredito {
                 + prestamo.getCliente());
     }
 
+    public void agregarPrestamo() {
+
+        Prestamo prestamo = new Prestamo();
+
+        System.out.println("Ingrese el importe del nuevo prestamo:");
+        prestamo.setImporte(new BigDecimal(Teclado.nextInt()));
+        Teclado.nextLine();
+
+        System.out.println("Ingrese el numero de cuotas deseadas:");
+        prestamo.setCuotas(Teclado.nextInt());
+        Teclado.nextLine();
+
+        prestamo.setFecha(new Date());
+        prestamo.setFechaAlta(new Date());
+
+        System.out.println("Ingrese el cliente Id:");
+        int id = Teclado.nextInt();
+        Teclado.nextLine();
+        
+        Cliente clienteEncontrado = clienteManager.read(id);
+        prestamo.setCliente(clienteEncontrado);
+
+        prestamoManager.create(prestamo);
+    
+    }
+
     public static void printOpciones() {
         System.out.println("=======================================");
         System.out.println("");
@@ -260,6 +289,7 @@ public class ProgramaCredito {
         System.out.println("4. Para ver el listado.");
         System.out.println("5. Buscar un cliente por nombre especifico(SQL Injection)).");
         System.out.println("6. Para ver el listado de prestamos.");
+        System.out.println("7. Para agregar un prestamo a un cliente existente.");
         System.out.println("0. Para terminar.");
         System.out.println("");
         System.out.println("=======================================");
