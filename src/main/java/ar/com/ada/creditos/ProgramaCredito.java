@@ -256,6 +256,14 @@ public class ProgramaCredito {
 
     public void agregarPrestamo() {
 
+        System.out.println("Ingrese el cliente Id:");
+        int id = Teclado.nextInt();
+        Teclado.nextLine();
+        
+        Cliente clienteEncontrado = clienteManager.read(id);
+        System.out.println("Cliente encontrado: ");
+        mostrarCliente(clienteEncontrado);
+
         Prestamo prestamo = new Prestamo();
 
         System.out.println("Ingrese el importe del nuevo prestamo:");
@@ -269,12 +277,9 @@ public class ProgramaCredito {
         prestamo.setFecha(new Date());
         prestamo.setFechaAlta(new Date());
 
-        System.out.println("Ingrese el cliente Id:");
-        int id = Teclado.nextInt();
-        Teclado.nextLine();
-        
-        Cliente clienteEncontrado = clienteManager.read(id);
         prestamo.setCliente(clienteEncontrado);
+        prestamoManager.create(prestamo);
+
     }
 
     public static void printOpciones() {

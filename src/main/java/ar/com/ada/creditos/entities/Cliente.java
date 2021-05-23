@@ -3,6 +3,8 @@ package ar.com.ada.creditos.entities;
 import java.util.*;
 import javax.persistence.*;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.NaturalId;
 
 import ar.com.ada.creditos.exceptions.ClienteDNIException;
@@ -27,6 +29,7 @@ public class Cliente {
     private Date fechaNacimiento;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE) 
     private List<Prestamo> prestamos = new ArrayList<>();
 
     public Cliente(String nombre) {
