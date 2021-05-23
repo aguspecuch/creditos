@@ -275,9 +275,6 @@ public class ProgramaCredito {
         
         Cliente clienteEncontrado = clienteManager.read(id);
         prestamo.setCliente(clienteEncontrado);
-
-        prestamoManager.create(prestamo);
-    
     }
 
     public static void printOpciones() {
