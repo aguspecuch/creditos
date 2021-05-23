@@ -1,5 +1,6 @@
 package ar.com.ada.creditos;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -83,12 +84,19 @@ public class ProgramaCredito {
         if (domAlternativo != null)
             cliente.setDireccionAlternativa(domAlternativo);
 
-        System.out.println("Ingrese fecha de nacimiento:");
+        System.out.println("Ingrese fecha de nacimiento (DD/MM/AA):");
         Date fecha = null;
         DateFormat dateformatArgentina = new SimpleDateFormat("dd/MM/yy");
 
         fecha = dateformatArgentina.parse(Teclado.nextLine());
         cliente.setFechaNacimiento(fecha);
+
+        Prestamo prestamo = new Prestamo();
+        prestamo.setImporte(new BigDecimal(10000));
+        prestamo.setCuotas(5);
+        prestamo.setFecha(new Date());
+        prestamo.setFechaAlta(new Date());
+        prestamo.setCliente(cliente);
 
         ABMCliente.create(cliente);
 

@@ -1,7 +1,6 @@
 package ar.com.ada.creditos.entities;
 
-import java.util.Date;
-
+import java.util.*;
 import javax.persistence.*;
 
 import org.hibernate.annotations.NaturalId;
@@ -12,7 +11,7 @@ import ar.com.ada.creditos.exceptions.ClienteNombreException;
 @Entity
 @Table(name = "cliente")
 public class Cliente {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cliente_id")
@@ -27,27 +26,29 @@ public class Cliente {
     @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
 
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Prestamo> prestamos = new ArrayList<>();
 
-    public Cliente(String nombre) { // No se para que sirve
+    public Cliente(String nombre) {
         this.nombre = nombre;
     }
 
-    public Cliente() { // No se para que sirve
+    public Cliente() {
     }
 
-    // toString es un metodo 'default' de todos los objetos que da un nombre largo y feo.
+    // toString es un metodo 'default' de todos los objetos que da un nombre largo y
+    // feo.
     // Se hace un override para cambiarlo y que de un nombre mas lindo.
     @Override
     public String toString() {
-        return "Cliente [id="+ clienteId +", dni=" + dni + ", nombre=" + nombre + "]";
+        return "Cliente [id=" + clienteId + ", dni=" + dni + ", nombre=" + nombre + "]";
     }
 
-
-    public int getClienteId(){
+    public int getClienteId() {
         return clienteId;
     }
 
-    public void setClienteId(int clienteId) throws ClienteDNIException{
+    public void setClienteId(int clienteId) throws ClienteDNIException {
         if (dni < 0) {
             // no se ejecuta nada mas despues del throw
             throw new ClienteDNIException(this, "ocurrio un error con el DNI");
@@ -55,11 +56,11 @@ public class Cliente {
         this.clienteId = clienteId;
     }
 
-    public String getNombre(){
+    public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) throws ClienteNombreException{
+    public void setNombre(String nombre) throws ClienteNombreException {
 
         if (nombre.equals("")) {
             throw new ClienteNombreException(this, "no ingreso un nombre valido");
@@ -67,35 +68,47 @@ public class Cliente {
         this.nombre = nombre;
     }
 
-    public int getDni(){
+    public int getDni() {
         return dni;
     }
 
-    public void setDni(int dni){
+    public void setDni(int dni) {
         this.dni = dni;
     }
 
-    public String getDireccion(){
+    public String getDireccion() {
         return direccion;
     }
 
-    public void setDireccion(String direccion){
+    public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
 
-    public String getDireccionAlternativa(){
+    public String getDireccionAlternativa() {
         return direccionAlternativa;
     }
 
-    public void setDireccionAlternativa(String direccionAlternativa){
+    public void setDireccionAlternativa(String direccionAlternativa) {
         this.direccionAlternativa = direccionAlternativa;
     }
 
-    public Date getFechaNacimiento(){
+    public Date getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento){
+    public void setFechaNacimiento(Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public List<Prestamo> getPrestamos() {
+        return prestamos;
+    }
+
+    public void setPrestamos(List<Prestamo> prestamos) {
+        this.prestamos = prestamos;
+    }
+
+    public void agregarPrestamo(Prestamo prestamo){
+        this.prestamos.add(prestamo);
     }
 }
