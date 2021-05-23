@@ -15,10 +15,8 @@ import ar.com.ada.creditos.entities.*;
 
 public class ClienteManager {
     
-    // ¿Esto seria una pestaña de query de SQL?
     protected SessionFactory sessionFactory;
 
-    // Esto no entiendo nada la verdad.
     public void setup() {
 
         java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.OFF);
@@ -33,7 +31,6 @@ public class ClienteManager {
 
     }
 
-    // Esto calculo que cerraria esa pestaña de query de SQL.
     public void exit() {
         sessionFactory.close();
     }

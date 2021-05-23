@@ -15,12 +15,14 @@ public class ProgramaCredito {
 
     public static Scanner Teclado = new Scanner(System.in);
 
-    protected ClienteManager ABMCliente = new ClienteManager();
+    protected ClienteManager clienteManager = new ClienteManager();
+    protected PrestamoManager prestamoManager = new PrestamoManager();
 
     public void iniciar() throws Exception {
 
         try {
-            ABMCliente.setup();
+            clienteManager.setup();
+            prestamoManager.setup();
             printOpciones();
 
             int opcion = Teclado.nextInt();
@@ -42,10 +44,13 @@ public class ProgramaCredito {
                         modifica();
                         break;
                     case 4:
-                        listar();
+                        listarClientes();
                         break;
                     case 5:
-                        listarPorNombre();
+                        listarClientePorNombre();
+                        break;
+                    case 6:
+                        listarPrestamos();
                         break;
                     default:
                         System.out.println("La opcion no es correcta.");
@@ -57,7 +62,7 @@ public class ProgramaCredito {
                 Teclado.nextLine();
             }
             // Hago un safe exit del manager
-            ABMCliente.exit();
+            clienteManager.exit();
 
         } catch (Exception e) {
             // TODO: handle exception
@@ -91,14 +96,7 @@ public class ProgramaCredito {
         fecha = dateformatArgentina.parse(Teclado.nextLine());
         cliente.setFechaNacimiento(fecha);
 
-        Prestamo prestamo = new Prestamo();
-        prestamo.setImporte(new BigDecimal(10000));
-        prestamo.setCuotas(5);
-        prestamo.setFecha(new Date());
-        prestamo.setFechaAlta(new Date());
-        prestamo.setCliente(cliente);
-
-        ABMCliente.create(cliente);
+        clienteManager.create(cliente);
 
         /*
          * Si concateno el OBJETO directamente, me trae todo lo que este en el metodo
@@ -116,7 +114,7 @@ public class ProgramaCredito {
         System.out.println("Ingrese el ID de Cliente:");
         int id = Teclado.nextInt();
         Teclado.nextLine();
-        Cliente clienteEncontrado = ABMCliente.read(id);
+        Cliente clienteEncontrado = clienteManager.read(id);
 
         if (clienteEncontrado == null) {
             System.out.println("Cliente no encontrado.");
@@ -124,7 +122,7 @@ public class ProgramaCredito {
         } else {
 
             try {
-                ABMCliente.delete(clienteEncontrado);
+                clienteManager.delete(clienteEncontrado);
                 System.out
                         .println("El registro del cliente " + clienteEncontrado.getClienteId() + " ha sido eliminado.");
             } catch (Exception e) {
@@ -138,13 +136,13 @@ public class ProgramaCredito {
         String nombre = Teclado.nextLine();
         System.out.println("Ingrese el DNI de Cliente:");
         int dni = Teclado.nextInt();
-        Cliente clienteEncontrado = ABMCliente.readByDNI(dni);
+        Cliente clienteEncontrado = clienteManager.readByDNI(dni);
 
         if (clienteEncontrado == null) {
             System.out.println("Cliente no encontrado.");
 
         } else {
-            ABMCliente.delete(clienteEncontrado);
+            clienteManager.delete(clienteEncontrado);
             System.out.println("El registro del DNI " + clienteEncontrado.getDni() + " ha sido eliminado.");
         }
     }
@@ -155,7 +153,7 @@ public class ProgramaCredito {
         System.out.println("Ingrese el ID de la cliente a modificar:");
         int id = Teclado.nextInt();
         Teclado.nextLine();
-        Cliente clienteEncontrado = ABMCliente.read(id);
+        Cliente clienteEncontrado = clienteManager.read(id);
 
         if (clienteEncontrado != null) {
 
@@ -198,7 +196,7 @@ public class ProgramaCredito {
             }
 
             // Teclado.nextLine();
-            ABMCliente.update(clienteEncontrado);
+            clienteManager.update(clienteEncontrado);
             System.out.println("El registro de " + clienteEncontrado.getNombre() + " ha sido modificado.");
 
         } else {
@@ -206,9 +204,9 @@ public class ProgramaCredito {
         }
     }
 
-    public void listar() {
+    public void listarClientes() {
 
-        List<Cliente> todos = ABMCliente.buscarTodos();
+        List<Cliente> todos = clienteManager.buscarTodos();
         for (Cliente c : todos) {
             mostrarCliente(c);
         }
@@ -228,15 +226,29 @@ public class ProgramaCredito {
         System.out.println(" Fecha Nacimiento: " + fechaNacimientoStr);
     }
 
-    public void listarPorNombre() {
+    public void listarClientePorNombre() {
 
         System.out.println("Ingrese el nombre:");
         String nombre = Teclado.nextLine();
 
-        List<Cliente> clientes = ABMCliente.buscarPor(nombre);
+        List<Cliente> clientes = clienteManager.buscarPor(nombre);
         for (Cliente cliente : clientes) {
             mostrarCliente(cliente);
         }
+    }
+
+    public void listarPrestamos() {
+
+        List<Prestamo> todos = prestamoManager.buscarTodos();
+        for (Prestamo p : todos) {
+            mostrarPrestamo(p);
+        }
+    }
+
+    public void mostrarPrestamo(Prestamo prestamo) {
+
+        System.out.println("IdPrestamo: " + prestamo.getPrestamoId() + " - Importe: " + prestamo.getImporte() + " "
+                + prestamo.getCliente());
     }
 
     public static void printOpciones() {
@@ -247,6 +259,7 @@ public class ProgramaCredito {
         System.out.println("3. Para modificar un cliente.");
         System.out.println("4. Para ver el listado.");
         System.out.println("5. Buscar un cliente por nombre especifico(SQL Injection)).");
+        System.out.println("6. Para ver el listado de prestamos.");
         System.out.println("0. Para terminar.");
         System.out.println("");
         System.out.println("=======================================");
