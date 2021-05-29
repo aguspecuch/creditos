@@ -60,6 +60,10 @@ public class ProgramaCredito {
                     case 7:
                         altaPrestamo();
                         break;
+                    case 8:
+                        altaCancelacion();
+                        ;
+                        break;
                     default:
                         System.out.println("La opcion no es correcta.");
                         break;
@@ -254,7 +258,7 @@ public class ProgramaCredito {
 
     public void mostrarPrestamo(Prestamo prestamo) {
 
-        System.out.println("IdPrestamo: " + prestamo.getPrestamoId() + " - Importe: " + prestamo.getImporte() + " "
+        System.out.println("IdPrestamo: " + prestamo.getPrestamoId() + " - Importe: " + prestamo.getImporte() + " Estado: " + prestamo.getEstadoId()+ " "
                 + prestamo.getCliente());
     }
 
@@ -265,26 +269,95 @@ public class ProgramaCredito {
         Teclado.nextLine();
 
         Cliente clienteEncontrado = clienteManager.read(id);
-        System.out.println("Cliente encontrado: ");
-        mostrarCliente(clienteEncontrado);
 
-        Prestamo prestamo = new Prestamo();
+        if (clienteEncontrado != null) {
 
-        System.out.println("Ingrese el importe del nuevo prestamo:");
-        prestamo.setImporte(new BigDecimal(Teclado.nextInt()));
+            System.out.println("Cliente encontrado: ");
+            mostrarCliente(clienteEncontrado);
+
+            Prestamo prestamo = new Prestamo();
+
+            System.out.println("Ingrese el importe del nuevo prestamo:");
+            prestamo.setImporte(new BigDecimal(Teclado.nextInt()));
+            Teclado.nextLine();
+
+            System.out.println("Ingrese el numero de cuotas deseadas:");
+            prestamo.setCuotas(Teclado.nextInt());
+            Teclado.nextLine();
+
+            prestamo.setFecha(new Date());
+            prestamo.setFechaAlta(new Date());
+
+            prestamo.setCliente(clienteEncontrado);
+            prestamo.setEstadoId(EstadoPrestamoEnum.APROBADO);
+
+            prestamoManager.create(prestamo);
+            clienteEncontrado.agregarPrestamo(prestamo);
+
+            System.out.println("Prestamo generado con exito:");
+            mostrarPrestamo(prestamo);
+
+        }
+
+        else {
+            System.out.println("Cliente no encontrado.");
+        }
+
+    }
+
+    public void altaCancelacion() {
+        System.out.println("Ingrese el cliente Id:");
+        int id = Teclado.nextInt();
         Teclado.nextLine();
 
-        System.out.println("Ingrese el numero de cuotas deseadas:");
-        prestamo.setCuotas(Teclado.nextInt());
-        Teclado.nextLine();
+        Cliente clienteEncontrado = clienteManager.read(id);
 
-        prestamo.setFecha(new Date());
-        prestamo.setFechaAlta(new Date());
+        if (clienteEncontrado != null) {
 
-        prestamo.setCliente(clienteEncontrado);
-        prestamo.setEstadoId(EstadoPrestamoEnum.APROBADO);
-        prestamoManager.create(prestamo);
+            System.out.println("Prestamos encontrados:");
+            for (Prestamo p : clienteEncontrado.getPrestamos()) {
+                System.out.println("Id: " + p.getPrestamoId() + "" + " Importe: $" + p.getImporte());
+            }
 
+            System.out.println("Ingrese el Id del prestamo que desea pagar:");
+            int prestamoId = Teclado.nextInt();
+            Teclado.nextLine();
+
+            Prestamo prestamoEncontrado = prestamoManager.read(prestamoId);
+
+            if (!prestamoEncontrado.getImporte().equals(new BigDecimal(0))) {
+
+                Cancelacion cancelacion = new Cancelacion();
+
+                System.out.println("Ingrese el numero de cuota:");
+                cancelacion.setCuota(Teclado.nextInt());
+                Teclado.nextLine();
+
+                System.out.println("Ingrese el monto que desea pagar");
+                cancelacion.setImporte(new BigDecimal(Teclado.nextInt()));
+
+                cancelacion.setPrestamo(prestamoEncontrado);
+                cancelacion.setFechaCancelacion(new Date());
+
+                cancelacionManager.create(cancelacion);
+                prestamoEncontrado.agregarCancelacion(cancelacion);
+
+                System.out.println("Cuota " + cancelacion.getCuota() + " pagada con exito.");
+
+                prestamoEncontrado.setImporte(prestamoEncontrado.getImporte().subtract(cancelacion.getImporte()));
+                prestamoManager.update(prestamoEncontrado);
+                
+                if (prestamoEncontrado.getImporte().equals(new BigDecimal(0))) {
+                    prestamoEncontrado.setEstadoId(EstadoPrestamoEnum.CANCELADO);
+                    prestamoManager.update(prestamoEncontrado);
+                }
+
+            } else {
+                System.out.println("Ese prestamo ya fue pagado.");
+            }
+        } else {
+            System.out.println("Cliente no encontrado.");
+        }
     }
 
     public static void printOpciones() {
@@ -297,6 +370,7 @@ public class ProgramaCredito {
         System.out.println("5. Buscar un cliente por nombre especifico(SQL Injection)).");
         System.out.println("6. Para ver el listado de prestamos.");
         System.out.println("7. Para agregar un prestamo a un cliente existente.");
+        System.out.println("8. Para pagar una cuota de un prestamo.");
         System.out.println("0. Para terminar.");
         System.out.println("");
         System.out.println("=======================================");

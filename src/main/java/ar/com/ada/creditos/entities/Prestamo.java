@@ -5,10 +5,13 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 @Entity
-@Table (name = "prestamo")
+@Table(name = "prestamo")
 public class Prestamo {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "prestamo_id")
@@ -32,42 +35,53 @@ public class Prestamo {
     private int estadoId;
 
     @OneToMany(mappedBy = "prestamo", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Cancelacion> cancelaciones = new ArrayList<>();
 
     public int getPrestamoId() {
         return prestamoId;
     }
+
     public void setPrestamoId(int prestamoId) {
         this.prestamoId = prestamoId;
     }
-    
+
     public BigDecimal getImporte() {
         return importe;
     }
+
     public void setImporte(BigDecimal importe) {
         this.importe = importe;
     }
+
     public int getCuotas() {
         return cuotas;
     }
+
     public void setCuotas(int cuotas) {
         this.cuotas = cuotas;
     }
+
     public Date getFecha() {
         return fecha;
     }
+
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
+
     public Date getFechaAlta() {
         return fechaAlta;
     }
+
     public void setFechaAlta(Date fechaAlta) {
         this.fechaAlta = fechaAlta;
     }
+
     public Cliente getCliente() {
         return cliente;
     }
+
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
         cliente.agregarPrestamo(this);
@@ -83,14 +97,9 @@ public class Prestamo {
     public void setEstadoId(EstadoPrestamoEnum estadoId) {
         this.estadoId = estadoId.getValue();
     }
-    
+
     public enum EstadoPrestamoEnum {
-        SOLICITADO(1), 
-        RECHAZADO(2),
-        PENDIENTE_APROBACION(3),
-        APROBADO(4),
-        INCOBRABLE(5),
-        CANCELADO(6),
+        SOLICITADO(1), RECHAZADO(2), PENDIENTE_APROBACION(3), APROBADO(4), INCOBRABLE(5), CANCELADO(6),
         PREAPROBADO(100);
 
         private final int value;
@@ -114,5 +123,17 @@ public class Prestamo {
             }
             return status;
         }
+    }
+
+    public List<Cancelacion> getCancelaciones() {
+        return cancelaciones;
+    }
+
+    public void setCancelaciones(List<Cancelacion> cancelaciones) {
+        this.cancelaciones = cancelaciones;
+    }
+
+    public void agregarCancelacion(Cancelacion cancelacion) {
+        this.cancelaciones.add(cancelacion);
     }
 }
