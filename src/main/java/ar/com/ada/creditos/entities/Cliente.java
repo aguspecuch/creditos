@@ -51,11 +51,7 @@ public class Cliente {
         return clienteId;
     }
 
-    public void setClienteId(int clienteId) throws ClienteDNIException {
-        if (dni < 0) {
-            // no se ejecuta nada mas despues del throw
-            throw new ClienteDNIException(this, "ocurrio un error con el DNI");
-        }
+    public void setClienteId(int clienteId) {
         this.clienteId = clienteId;
     }
 
@@ -68,6 +64,7 @@ public class Cliente {
         if (nombre.equals("")) {
             throw new ClienteNombreException(this, "no ingreso un nombre valido");
         }
+
         this.nombre = nombre;
     }
 
@@ -75,7 +72,13 @@ public class Cliente {
         return dni;
     }
 
-    public void setDni(int dni) {
+    public void setDni(int dni) throws ClienteDNIException {
+
+        if (dni < 0) {
+            // no se ejecuta nada mas despues del throw
+            throw new ClienteDNIException(this, "ocurrio un error con el DNI");
+        }
+
         this.dni = dni;
     }
 

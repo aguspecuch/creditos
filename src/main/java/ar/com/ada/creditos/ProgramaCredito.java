@@ -38,6 +38,8 @@ public class ProgramaCredito {
                             alta();
                         } catch (ClienteDNIException exdni) {
                             System.out.println("Error en el DNI. Indique uno valido");
+                        } catch (ClienteNombreException exnombre) {
+                            System.out.println("Error en el NOMBRE. Indique uno valido");
                         }
                         break;
                     case 2:
@@ -56,7 +58,7 @@ public class ProgramaCredito {
                         listarPrestamos();
                         break;
                     case 7:
-                        agregarPrestamo();
+                        altaPrestamo();
                         break;
                     default:
                         System.out.println("La opcion no es correcta.");
@@ -256,7 +258,7 @@ public class ProgramaCredito {
                 + prestamo.getCliente());
     }
 
-    public void agregarPrestamo() {
+    public void altaPrestamo() {
 
         System.out.println("Ingrese el cliente Id:");
         int id = Teclado.nextInt();
