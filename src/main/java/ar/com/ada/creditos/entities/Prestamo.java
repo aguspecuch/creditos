@@ -13,16 +13,23 @@ public class Prestamo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "prestamo_id")
     private int prestamoId;
+
     private BigDecimal importe;
+
     private int cuotas;
+
     @Temporal(TemporalType.DATE)
     private Date fecha;
+
     @Column(name = "fecha_alta")
     private Date fechaAlta;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id")
     private Cliente cliente;
+
+    @Column(name = "estado_id")
+    private int estadoId;
 
     @OneToMany(mappedBy = "prestamo", cascade = CascadeType.ALL)
     private List<Cancelacion> cancelaciones = new ArrayList<>();
@@ -66,12 +73,46 @@ public class Prestamo {
         cliente.agregarPrestamo(this);
     }
 
-    public List<Cancelacion> getCancelaciones() {
-        return cancelaciones;
-    }
-    public void setCancelaciones(List<Cancelacion> cancelaciones) {
-        this.cancelaciones = cancelaciones;
+    // ENUMERADO
+
+    public EstadoPrestamoEnum getEstadoId() {
+
+        return EstadoPrestamoEnum.parse(this.estadoId);
     }
 
+    public void setEstadoId(EstadoPrestamoEnum estadoId) {
+        this.estadoId = estadoId.getValue();
+    }
+    
+    public enum EstadoPrestamoEnum {
+        SOLICITADO(1), 
+        RECHAZADO(2),
+        PENDIENTE_APROBACION(3),
+        APROBADO(4),
+        INCOBRABLE(5),
+        CANCELADO(6),
+        PREAPROBADO(100);
 
+        private final int value;
+
+        // NOTE: Enum constructor tiene que estar en privado
+        private EstadoPrestamoEnum(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static EstadoPrestamoEnum parse(int id) {
+            EstadoPrestamoEnum status = null; // Default
+            for (EstadoPrestamoEnum item : EstadoPrestamoEnum.values()) {
+                if (item.getValue() == id) {
+                    status = item;
+                    break;
+                }
+            }
+            return status;
+        }
+    }
 }

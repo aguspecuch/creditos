@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import ar.com.ada.creditos.entities.*;
+import ar.com.ada.creditos.entities.Prestamo.EstadoPrestamoEnum;
 import ar.com.ada.creditos.exceptions.*;
 import ar.com.ada.creditos.managers.*;
 
@@ -279,6 +280,7 @@ public class ProgramaCredito {
         prestamo.setFechaAlta(new Date());
 
         prestamo.setCliente(clienteEncontrado);
+        prestamo.setEstadoId(EstadoPrestamoEnum.APROBADO);
         prestamoManager.create(prestamo);
 
     }
