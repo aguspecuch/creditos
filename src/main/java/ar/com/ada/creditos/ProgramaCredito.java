@@ -198,7 +198,6 @@ public class ProgramaCredito {
                     break;
             }
 
-            // Teclado.nextLine();
             clienteManager.update(clienteEncontrado);
             System.out.println("El registro de " + clienteEncontrado.getNombre() + " ha sido modificado.");
 
@@ -259,7 +258,7 @@ public class ProgramaCredito {
         System.out.println("Ingrese el cliente Id:");
         int id = Teclado.nextInt();
         Teclado.nextLine();
-        
+
         Cliente clienteEncontrado = clienteManager.read(id);
         System.out.println("Cliente encontrado: ");
         mostrarCliente(clienteEncontrado);

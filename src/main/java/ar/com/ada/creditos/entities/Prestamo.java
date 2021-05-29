@@ -1,7 +1,7 @@
 package ar.com.ada.creditos.entities;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.*;
 
 import javax.persistence.*;
 
@@ -24,12 +24,16 @@ public class Prestamo {
     @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id")
     private Cliente cliente;
 
+    @OneToMany(mappedBy = "prestamo", cascade = CascadeType.ALL)
+    private List<Cancelacion> cancelaciones = new ArrayList<>();
+
     public int getPrestamoId() {
         return prestamoId;
     }
     public void setPrestamoId(int prestamoId) {
         this.prestamoId = prestamoId;
     }
+    
     public BigDecimal getImporte() {
         return importe;
     }
@@ -62,7 +66,12 @@ public class Prestamo {
         cliente.agregarPrestamo(this);
     }
 
-    
+    public List<Cancelacion> getCancelaciones() {
+        return cancelaciones;
+    }
+    public void setCancelaciones(List<Cancelacion> cancelaciones) {
+        this.cancelaciones = cancelaciones;
+    }
 
 
 }

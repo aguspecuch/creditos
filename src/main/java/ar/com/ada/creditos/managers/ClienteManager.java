@@ -14,14 +14,15 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ar.com.ada.creditos.entities.*;
 
 public class ClienteManager {
-    
+
     protected SessionFactory sessionFactory;
 
+    // conexion inicial a la base de datos
     public void setup() {
 
         java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.OFF);
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
-        
+
         try {
             sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
         } catch (Exception ex) {
@@ -88,7 +89,6 @@ public class ClienteManager {
         session.close();
     }
 
-    
     /**
      * Este metodo en la vida real no debe existir ya qeu puede haber miles de
      * usuarios
@@ -102,7 +102,7 @@ public class ClienteManager {
         /// NUNCA HARCODEAR SQLs nativos en la aplicacion.
         // ESTO es solo para nivel educativo
         Query query = session.createNativeQuery("SELECT * FROM cliente", Cliente.class);
-        //query = session.createQuery("From Obse")
+        // query = session.createQuery("From Obse")
         List<Cliente> todos = query.getResultList();
 
         return todos;
