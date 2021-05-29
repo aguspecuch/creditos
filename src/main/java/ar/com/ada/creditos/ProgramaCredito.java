@@ -17,12 +17,14 @@ public class ProgramaCredito {
 
     protected ClienteManager clienteManager = new ClienteManager();
     protected PrestamoManager prestamoManager = new PrestamoManager();
+    protected CancelacionManager cancelacionManager = new CancelacionManager();
 
     public void iniciar() throws Exception {
 
         try {
             clienteManager.setup();
             prestamoManager.setup();
+            cancelacionManager.setup();
             printOpciones();
 
             int opcion = Teclado.nextInt();
