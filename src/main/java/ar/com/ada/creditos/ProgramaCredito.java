@@ -221,6 +221,9 @@ public class ProgramaCredito {
         for (Cliente c : todos) {
             mostrarCliente(c);
         }
+
+        int cantidadClientes = clienteManager.contarClienteJPQL();
+        System.out.println("La cantidad de clientes totales es: "+ cantidadClientes);
     }
 
     public void mostrarCliente(Cliente cliente) {
