@@ -3,7 +3,7 @@ package ar.com.ada.creditos.entities.reportes;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-@Entity
+
 public class ReporteCantClientesPrestamo {
     
     @Column(name="cant_clientes")

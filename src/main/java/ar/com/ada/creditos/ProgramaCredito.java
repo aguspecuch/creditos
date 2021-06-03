@@ -19,7 +19,7 @@ public class ProgramaCredito {
     protected ClienteManager clienteManager = new ClienteManager();
     protected PrestamoManager prestamoManager = new PrestamoManager();
     protected CancelacionManager cancelacionManager = new CancelacionManager();
-
+    
     public void iniciar() throws Exception {
 
         try {
@@ -348,16 +348,17 @@ public class ProgramaCredito {
                 System.out.println("Cuota " + cancelacion.getCuota() + " pagada con exito.");
 
                 prestamoEncontrado.setImporte(prestamoEncontrado.getImporte().subtract(cancelacion.getImporte()));
-                prestamoManager.update(prestamoEncontrado);
                 
                 if (prestamoEncontrado.getImporte().equals(new BigDecimal(0))) {
                     prestamoEncontrado.setEstadoId(EstadoPrestamoEnum.CANCELADO);
-                    prestamoManager.update(prestamoEncontrado);
                 }
 
             } else {
                 System.out.println("Ese prestamo ya fue pagado.");
             }
+
+            prestamoManager.update(prestamoEncontrado);
+
         } else {
             System.out.println("Cliente no encontrado.");
         }
